@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+  
+</head>
+<body >
+
+<div class="container">
+  <h1>Instagram</h1>
+ 
+  <ul class="nav nav-tabs">
+   
+    <li class="active" ><a data-toggle="tab" href="#feedpage">FEEDPAGE</a></li>
+    <li><a data-toggle="tab" href="#followerspage" onclick="getall();getlist();getpendinglist();">FOLLOWERSPAGE</a></li>
+    <li><a data-toggle="tab" href="#logout">LOGOUT</a></li>
+  </ul>
+
+  <div class="tab-content">
+    
+    <div id="feedpage" class="tab-pane fade in active">
+       <div  style="float: right;">
+    <form id="upload-form" class="upload-box" action="serv" method="post" enctype="multipart/form-data">
+	<h1>Upload a post!</h1> 
+	<input type="file" name="myimg"><br><br>
+	<input type="submit" name="upload" value="Upload" >
+</form>
+<img id="myimg" src="">
+   </div>
+      <div class="panel-body">
+      <h1>My post!</h1> 
+                    <table  border="2" id="imagetable" class="table table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                              
+                               
+                            </tr>  
+                        </thead>  
+                    </table>  
+                </div>
+                <h1>My feed!</h1> 
+                <div class="panel-body">
+                    <table  id="imagetable1" class="table table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                              
+                               
+                            </tr>  
+                        </thead>  
+                    </table>  
+                </div>
+      
+      </div>
+     
+    <div id="followerspage" class="tab-pane fade">
+      <h3>Pending request</h3>
+      <div class="panel-body">
+                    <table id="table" class="table table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                
+                               
+                            </tr>  
+                        </thead>  
+                    </table>  
+                </div>
+     
+     
+      <h3>Suggestions for you </h3>
+      <div class="panel-body">
+                    <table id="tbl" class="table table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                
+                               
+                            </tr>  
+                        </thead>  
+                    </table>  
+                </div>
+      
+      
+      
+      <h3>Followers</h3>
+       <div class="panel-body">
+                    <table id="tbl-student" class="table table-bordered" cellpadding="0" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                
+                               
+                            </tr>  
+                        </thead>  
+                    </table>  
+                </div>
+      </div>
+    
+  
+   <div id="logout" class="tab-pane fade">
+      <h3>Log out</h3>
+       <form id="logout-form" method="post" class="upload-box" action="logout">
+     <input type="submit" name="Logout" value="Logout" >
+     </form>
+    </div>
+    </div>
+  <script>
+
+  getallimage();
+image();
+
+function locationreload() {
+    location.reload();
+      
+} window.imgid=0;
+window.map1 = new Map();
+window.arr1=new Array();
+window.arr2=new Array();
+  window.value=0;  
+  window.value1=0; 
+  window.value2=0;
+ 
+  function getimg()
+  {
+	  var _Profile_PIC = document.getElementById('img').value;
+	  alert(_Profile_PIC);
+  }
+  
+  function getall()
+  { 
+	var flag=window.value;
+	console.log(flag);
+	  $.ajax({
+          
+          type: 'POST',
+          url : 'followers',
+          dataType: 'JSON',
+          data : {id:flag},
+          
+          success:function(data)
+          {
+        	  if(  window.value==0)
+        	  {
+        		  if(data.status.status=='success')
+        	  {
+        	  
+              var row;
+        	  for (var i=0; i<data.message.message1.length; i++) {
+                  row = $('<tr><td class="data">' + data.message.message1[i].followersname+ '</td></tr>');
+                  $('#tbl-student').append(row);
+                  window.value++;
+              
+        	  }
+        	
+        	  }
+          else
+        	  {
+        	  alert(data.status.message);
+        	  }
+          
+        	 
+          }  
+          }
+				
+			});
+			 
+	 }
+ function image(){ 
+
+	$.ajax({  
+	    url: 'post',
+	    type :'GET',
+	    dataType: 'JSON',
+
+	    success: function(data)
+	   
+	    { 
+
+      	  if(data.status.status='success')
+      	  {
+	    	for (var i=0; i<data.message.message1.length; i++) {
+	    		 $('#imagetable').append($('<img width="250" height="250"/>').attr('src', '/InstaPage/'+data.message.message1[i].image));
+	    	}
+      	  }
+	    	else
+	    		{
+	    		  alert(data.status.message);
+	    		}
+	    		 
+	    	
+	    }
+
+	   });}
+ function getallimage(){ 
+		
+		$.ajax({  
+		    url: 'feed',
+		    type :'GET',
+		    dataType: 'JSON',
+
+		    success: function(data)
+		    {
+		      	  if(data.status.status=='success')
+		      	  {
+		      		 
+		    	for (var i=0; i<data.message.message1.length; i++) {
+		    		if(i==0)
+		    			{
+		    			window.imgid=data.message.message1[i].id;
+		    			}
+		    		var k=0;
+		    		 $('#imagetable1').append($('<tr id=' +data.message.message1[i].id+ '><td class="data">' + data.message.message1[i].follower+ '</td></tr>'));
+		    		 $('#imagetable1').append($('<tr id=' +data.message.message1[i].id+ '><td><img id=' +data.message.message1[i].id+ ' src=/InstaPage/'+data.message.message1[i].image+' width="500" height="500"/><tr><td>'));
+		    	window.arr1.push(data.message.message1[i].id)
+		    	window.map1.set(data.message.message1[i].id,data.message.message1[i].follower)
+		    	} 
+		    	console.log(window.arr1);
+		    	console.log(window.map1)
+		      	  }
+		      	else
+	    		{
+	    		  alert(data.status.message);
+	    		}
+		    }
+
+		   });}
+ function upload() {
+	    $.ajax({
+	        type: "POST",
+	        url: "/serv",
+	        async: true,
+	        data: $('.upload-box').serialize(),
+	        contentType: "multipart/form-data",
+	        processData: false,
+	        success: function(msg) {
+	            alert("File has been uploaded successfully");
+	        },
+	        error:function(msg) {
+	            $(".upload-box").html("Couldn't upload file");
+	        }
+	    });
+	};
+  function getlist()
+  { 
+	var flag= window.value1;
+	  $.ajax({
+          
+          type: 'POST',
+          url : 'suggestion',
+          dataType: 'JSON',
+          data : {id:flag},
+          success:function(data)
+          { 
+        	  if(  window.value1==0)
+		  {
+        	  if(data.status.status=='success')
+          	  { 
+              var row;
+        	  for (var i=0; i<data.message.message1.length; i++) {
+                  row = $('<tr id=' + data.message.message1[i].users+ '><td class="data">' + data.message.message1[i].users+ '</td><td><button id='+data.message.message1[i].users+' class="follow" value="follow" >Follow</button></td></tr>');
+                  $('#tbl').append(row);
+                  window.value1++;
+              }
+        		  }
+          	  
+        	  else
+        		  {
+        		  alert(data.status.message);
+        		  }
+          }}
+			});
+			 
+	 }
+  $(document).on('click', '.follow', function() {  
+	  var id = $(this).attr('id');
+	  
+	   $.ajax({
+	        
+	        type: 'POST',
+	        url : 'sendrequest',
+	        dataType: 'JSON',
+	        data : {id:id},
+	        
+	        success:function(data)
+	        {
+	      	if(data.status.status=='success')
+	      	{ alert("request sent");
+				 document.getElementById(id).remove();
+	      	}
+	      	else
+	      		{
+	      		alert(data.status.message);
+	      		}
+				 
+				
+		 }
+	});
+	    
+	  
+	}); 
+  
+  function getpendinglist()
+  { var flag= window.value2;
+	
+	  $.ajax({
+          
+          type: 'POST',
+          url : 'request',
+          dataType: 'JSON',
+          data : {id:flag},
+          
+          success:function(data)
+          { 
+        	   if(  window.value2==0)
+        		 { 
+        		   if(data.status.status=='success')
+        			   {
+              var row;
+              
+        	  for (var i=0; i<data.message.message1.length; i++) {
+        		if(data.message.message1[i].pendingrequest!=null)
+        			{
+                  row = $('<tr id='+ data.message.message1[i].pendingrequest+ '><td class="data">' + data.message.message1[i].pendingrequest+ '</td><td><button id='+data.message.message1[i].pendingrequest+' class="accept" value="accept" >Accept</button></td><td><button id='+data.message.message1[i].pendingrequest+' class="decline" value="decline" >Decline</button></td></tr>');
+                  $('#table').append(row);
+        			}
+        		var j=0;
+        		  window.value2++;
+        	  }
+        			   }
+        		   else
+        			   {
+        			   alert(data.status.message);
+        			   }
+              }
+          	  
+        	 
+          
+          }
+			});
+			 
+	 }
+ 
+  $(document).on('click', '.accept', function() {  
+	  var id = $(this).attr('id');
+	  var row;
+	  var row1;
+	   $.ajax({
+	        
+	        type: 'POST',
+	        url : 'accept',
+	        dataType: 'JSON',
+	        data : {id:id},
+	        
+	        success:function(data)
+	        {
+	      	if((data.status.status)=="success")
+	      	{ alert("request accepted");
+				 document.getElementById(id).remove();
+				 row = $('<tr id='+ data.message.message1.followers+ '><td class="data">' +data.message.message1.followers+ '</td></tr>');
+                 $('#tbl-student').append(row);
+                 for (var i=0; i<data.message.message1.imagedetails.length; i++) { 
+                 window.arr2.push(data.message.message1.imagedetails[i].id);
+                 window.map1.set(data.message.message1.imagedetails[i].id,data.message.message1.imagedetails[i].follower)
+                 }
+                var arr3=
+                	 new Array();
+                var arr4=new Array();
+                arr3= window.arr1.concat(window.arr2);
+                console.log(arr3);
+                 arr4=arr3.sort(function(a, b){return b-a});
+                 console.log(arr4);
+                
+                 $('#imagetable1 tr').remove();
+               
+                 for (var i=0; i<arr4.length; i++) {
+ 		    		if(i<10)
+ 		    			{
+ 		    		 $('#imagetable1').append($('<tr id=' +arr4[i]+ '><td class="data">' + window.map1.get(arr4[i])+ '</td></tr>'));
+ 		    		 $('#imagetable1').append($('<tr id=' +arr4[i]+ '><td><img id=' +arr4[i]+ ' src=/InstaPage/authenticate/getfeed/'+arr4[i]+' width="500" height="500"/><tr><td>'));
+ 		    	
+ 		    			}
+ 		      	  }
+	      	}
+	      	else
+	      		{
+	      		alert(data.status.message);
+	      		}
+             
+	        }
+		 
+	});
+	    
+	  
+	}); 
+  
+  $(document).on('click', '.decline', function() {  
+	  var id = $(this).attr('id');
+	  
+	   $.ajax({
+	        
+	        type: 'POST',
+	        url : 'decline',
+	        dataType: 'JSON',
+	        data : {id:id},
+	        
+	        success:function(data)
+	        {
+	      	if(data.status.status=="success")
+	      	{ alert("request declined");
+				 document.getElementById(id).remove();
+				 row = $('<tr id='+data.message.message1.suggestion+ '><td class="data">' + data.message.message1.suggestion+ '</td><td><button id='+data.message.message1.suggestion+' class="follow" value="follow" >Follow</button></td></tr>');
+                 $('#tbl').append(row);
+	      	}
+	      	else
+	      		{
+	      		alert(data.status.message);
+	      		}
+		 }
+	});
+	    
+	  
+	}); 
+  
+  </script>
+  
+   
+  </div>
+</div>
+
+</body>
+</html>

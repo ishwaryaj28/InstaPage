@@ -1,0 +1,78 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+          http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+    version="3.0">
+  
+    <display-name>Servlet 3.0 Web Application</display-name>
+  <display-name>Archetype Created Web Application</display-name>
+<servlet>
+    <servlet-name>page</servlet-name>
+    <jsp-file>/index.html</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>page</servlet-name>
+    <url-pattern>/page</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>page3</servlet-name>
+    <jsp-file>/demo.html</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>page3</servlet-name>
+    <url-pattern>/page3</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>page1</servlet-name>
+    <jsp-file>/signup.html</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>page1</servlet-name>
+    <url-pattern>/signup</url-pattern>
+</servlet-mapping>
+<servlet>
+    <servlet-name>page2</servlet-name>
+    <jsp-file>/home.html</jsp-file>
+</servlet>
+<servlet-mapping>
+    <servlet-name>page2</servlet-name>
+    <url-pattern>/authenticate/homepage</url-pattern>
+</servlet-mapping>
+ 
+ 
+	<servlet>
+		<servlet-name>dispatch</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+ 
+	<servlet-mapping>
+		<servlet-name>dispatch</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+ 
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/dispatch-servlet.xml</param-value>
+	</context-param>
+ 
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+<filter>
+	<filter-name>SessionFilter</filter-name>
+	<filter-class>
+		net.insta.usermanagement.filter.MyFilter
+	</filter-class>
+	
+</filter>
+<filter-mapping>
+	<filter-name>SessionFilter</filter-name>
+	<url-pattern>/authenticate/*</url-pattern>
+</filter-mapping>
+  
+</web-app>
